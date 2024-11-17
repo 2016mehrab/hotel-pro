@@ -12,18 +12,25 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./createCabinForm";
 import useDeleteCabin from "./useDeleteCabin";
+import useInsertCabin from "./useInsertCabin";
+import Modal from "../../ui/ReusableModal";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import Button from "../../ui/Button";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
+// const TableRow = styled.div`
+//   display: grid;
+//   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+//   column-gap: 2.4rem;
+//   align-items: center;
+//   padding: 1.4rem 2.4rem;
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+//   &:not(:last-child) {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+// `;
 
 const Img = styled.img`
   display: block;
@@ -51,29 +58,64 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+const Crud = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
 
 const CabinRow = ({ cabin }) => {
   const [showForm, setShowForm] = useState(false);
-
   const { isLoading: isDeleting, mutate } = useDeleteCabin();
-
+  const { isLoading: isDuplicating, mutate: duplicate } = useInsertCabin();
+  function handleDuplicate() {
+    const { id, ...obj } = cabin;
+    const c = { ...obj, name: `Copy of ${obj.name}` };
+    return duplicate(c);
+  }
   return (
-    <>
-      <TableRow role="row">
-        <Img src={cabin.image} />
-        <Cabin>{cabin.name}</Cabin>
-        <div>Fits up to {cabin.capacity} guests</div>
-        <Price>{formatCurrency(cabin.price)}</Price>
-        <Discount>{formatCurrency(cabin.discount)}</Discount>
-        <div>
-          <button onClick={() => setShowForm(!showForm)}>Edit</button>
-          <button onClick={() => mutate(cabin.id)} disabled={isDeleting}>
-            Delete
-          </button>
-        </div>
-      </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
-    </>
+    <Table.Row>
+      <Img src={cabin.image} />
+      <Cabin>{cabin.name}</Cabin>
+      <div>Fits up to {cabin.capacity} guests</div>
+      <Price>{formatCurrency(cabin.price)}</Price>
+      <Discount>{formatCurrency(cabin.discount)}</Discount>
+      <Crud>
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={cabin.id} />
+            <Menus.List id={cabin.id}>
+              
+              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
+              <Modal.Open requestedWindow="edit">
+                <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open requestedWindow="confirm-delete">
+                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+
+            </Menus.List>
+
+            <Modal.Window window="edit" closeIcon={<Button>X</Button>}>
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+
+            <Modal.Window
+              window="confirm-delete"
+              closeIcon={<Button>X</Button>}
+            >
+              <ConfirmDelete
+                resourceName="cabin"
+                disabled={isDeleting}
+                onConfirm={() => mutate(cabin.id)}
+              />
+            </Modal.Window>
+          </Menus.Menu>
+        </Modal>
+      </Crud>
+    </Table.Row>
   );
 };
 

@@ -17,10 +17,10 @@ export async function getBookings({ filter, sortBy, page }) {
   if (sortBy) {
     query = query.order(sortBy.field, { ascending: sortBy.order === "asc" });
   }
-  if(page){
-    const from = PAGE_SIZE * (page-1);
-    const to =from + PAGE_SIZE - 1;
-    query= query.range(from, to);
+  if (page) {
+    const from = PAGE_SIZE * (page - 1);
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
   }
 
   const { data, error, count } = await query;
@@ -117,7 +117,9 @@ export async function updateBooking(id, obj) {
 
 export async function deleteBooking(id) {
   // REMEMBER RLS POLICIES
+  console.log('triggered delete-booking', id);
   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
+
 
   if (error) {
     console.error(error);

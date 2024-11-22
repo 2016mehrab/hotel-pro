@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 
 export default function useCloseModal(
-  window,
+  windowName,
   requestedWindow,
   closeHandler,
   capture = true
 ) {
   const domRef = useRef();
   useEffect(() => {
-    if (window !== requestedWindow) return;
+    if (windowName !== requestedWindow) return;
     domRef.current.focus();
 
     function handleKeyDown(e) {
@@ -29,7 +29,7 @@ export default function useCloseModal(
       document.removeEventListener("click", handleClick, capture);
       document.removeEventListener("keydown", handleKeyDown, capture);
     };
-  }, [closeHandler, window, requestedWindow, capture, domRef]);
+  }, [closeHandler, windowName, requestedWindow, capture, domRef]);
 
   return domRef;
 }

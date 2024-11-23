@@ -14,8 +14,7 @@ export const useLogin = () => {
 		}),
 		onSuccess: (user) => {
 			queryClient.setQueryData(['user'], user)
-			console.log("from useLogin", user)
-			navigate("/dashboard");
+			navigate("/dashboard", { replace: true });
 
 		},
 

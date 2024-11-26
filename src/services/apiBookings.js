@@ -1,7 +1,50 @@
 /* eslint-disable no-unused-vars */
 import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
+import { insertGuests } from "./apiGuests";
 import supabase from "./supabase";
+
+export async function createBooking(data) {
+  // Bookings need a guestId and a cabinId. We can't tell Supabase IDs for each object, it will calculate them on its own. So it might be different for different people, especially after multiple uploads. Therefore, we need to first get all guestIds and cabinIds, and then replace the original IDs in the booking data with the actual ones from the DB
+
+  const guestData = {
+    fullName: data.fullName,
+    email: data.email,
+    nationality: data.nationality,
+    nationalID: data.nationalID,
+  }
+
+  const { data: guest, error: insertGuestError } = insertGuests(guestData);
+  if (insertGuestError) {
+    console.log(insertGuests.message)
+    throw new Error("Cabin booking failed");
+  }
+  const bookingData = {
+    guestId: guest.id,
+    cabinId: data.cabinId,
+    status: data.status,
+    isPaid: data.isPaid,
+    observations: data.observations,
+    totalPrice: data.totalPrice,
+    numNights: data.numNights,
+    numGuests: data.numGuests,
+    hasBreakfast: data.hasBreakfast,
+  }
+  const { error } = await supabase.from("bookings").insert(bookingData);
+  if (error) {
+    console.log(error.message);
+    throw new Error("Cabin booking failed");
+  }
+
+}
+export async function getAllBookings() {
+  const { data, error } = await supabase.from("bookings").select("*, cabins(*), guests(*)");
+  if (error) {
+    console.log(error.message);
+    throw new Error("bookings could not be fetched");
+  }
+  return data;
+}
 
 export async function getBookings({ filter, sortBy, page }) {
   // const { data, error } = await supabase.from("bookings").select("*, cabins(*), guests(*)");
@@ -117,7 +160,6 @@ export async function updateBooking(id, obj) {
 
 export async function deleteBooking(id) {
   // REMEMBER RLS POLICIES
-  console.log('triggered delete-booking', id);
   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 
 

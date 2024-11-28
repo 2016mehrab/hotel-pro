@@ -84,7 +84,7 @@ const CabinRow = ({ cabin }) => {
           <Menus.Menu>
             <Menus.Toggle id={cabin.id} />
             <Menus.List id={cabin.id}>
-              
+
               <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
                 Duplicate
               </Menus.Button>
@@ -98,12 +98,12 @@ const CabinRow = ({ cabin }) => {
 
             </Menus.List>
 
-            <Modal.Window window="edit" closeIcon={<Button>X</Button>}>
+            <Modal.Window windowName="edit" closeIcon={<Button>X</Button>}>
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
 
             <Modal.Window
-              window="confirm-delete"
+              windowName="confirm-delete"
               closeIcon={<Button>X</Button>}
             >
               <ConfirmDelete

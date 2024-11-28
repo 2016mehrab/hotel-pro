@@ -10,8 +10,11 @@ export default function useCheckout() {
     }),
 
     onSuccess: (data) => {
-      toast.success(`Booking #${data.id} successfully checked in!`);
-      queryClient.invalidateQueries({ active: true });
+      toast.success(`Booking #${data.id} successfully checked out!`);
+      queryClient.invalidateQueries((queries) => {
+        return queries.queryKey.includes('bookings');
+
+      });
     },
 
     onError: (error) => {

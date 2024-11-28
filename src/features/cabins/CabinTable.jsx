@@ -5,38 +5,60 @@ import CabinRow from "./CabinRow.jsx";
 import useCabins from "./useCabins.js";
 import Table from "../../ui/Table.jsx";
 import Menus from "../../ui/Menus.jsx";
+import { useSearchParams } from "react-router-dom";
+import Empty from "../../ui/Empty.jsx";
 
-const TableHeader = styled.header`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-
-  background-color: var(--color-grey-50);
-  border-bottom: 1px solid var(--color-grey-100);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-weight: 600;
-  color: var(--color-grey-600);
-  padding: 1.6rem 2.4rem;
-`;
 
 const CabinTable = () => {
   const { data: cabins, error, isLoading } = useCabins();
+  const [searchParams] = useSearchParams();
   if (isLoading) return <Spinner />;
+  if(cabins.length===0){
+    return (
+      <Empty resource="cabins" />
+    )
+  }
+
+  const filterValue = searchParams.get("discount") || "all";
+  let filteredCabins;
+  if (filterValue === "all") filteredCabins = cabins;
+  else if (filterValue === "no-discount") {
+    filteredCabins = cabins.filter((c) => c.discount === 0);
+  } else {
+    filteredCabins = cabins.filter((c) => c.discount !== 0);
+  }
+
+  const sortBy = searchParams.get("sortBy") || "created_at-desc";
+  const [field, order] = sortBy.split("-");
+  const sortedCabins = filteredCabins.sort((f, l) => {
+    const a = f[field];
+    const b = l[field];
+
+    if (a === undefined || b === undefined) {
+      console.error(`Sorting field '${field}' is missing in some items.`);
+      return 0; // Don't reorder if the field is missing
+    }
+
+    if (order === "asc") {
+      return a > b ? 1 : a < b ? -1 : 0;
+    } else {
+      return a > b ? -1 : a < b ? 1 : 0;
+    }
+  });
+
   return (
     <Menus>
       <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-        <TableHeader role="row">
+        <Table.Header role="row">
           <div></div>
           <div>Cabin</div>
           <div>Capacity</div>
           <div>Price</div>
           <div>Discount</div>
           <div></div>
-        </TableHeader>
+        </Table.Header>
         <Table.Body
-          data={cabins}
+          data={sortedCabins}
           render={(cabin) => {
             return <CabinRow cabin={cabin} key={cabin.id} />;
           }}

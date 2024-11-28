@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
-import { insertGuests } from "./apiGuests";
+import { insertGuest } from "./apiGuests";
 import supabase from "./supabase";
 
 export async function createBooking(data) {
@@ -14,12 +14,14 @@ export async function createBooking(data) {
     nationalID: data.nationalID,
   }
 
-  const { data: guest, error: insertGuestError } = insertGuests(guestData);
+  const { guest, error: insertGuestError } = await insertGuest(guestData);
   if (insertGuestError) {
-    console.log(insertGuests.message)
+    console.log(insertGuestError.message)
     throw new Error("Cabin booking failed");
   }
   const bookingData = {
+    startDate: data.startDate,
+    endDate: data.endDate,
     guestId: guest.id,
     cabinId: data.cabinId,
     status: data.status,

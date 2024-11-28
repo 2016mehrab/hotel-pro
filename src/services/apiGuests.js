@@ -2,8 +2,13 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-export async function insertGuests(guest) {
-  const { data, error } = await supabase.from("guests").insert(guest);
+export async function insertGuest(guestInfo) {
+  const { data, error } = await supabase.from("guests").insert(guestInfo).select();
+  const guest = data[0];
+  return { guest, error };
+}
+export async function insertGuests(guests) {
+  const { data, error } = await supabase.from("guests").insert(guests);
   return { data, error };
 }
 export async function deleteGuests() {

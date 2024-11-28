@@ -7,9 +7,11 @@ import useGuests from "./useGuests";
 import GuestRow from "./GuestRow";
 
 function GuestTable() {
-  const { isLoading, data: guests } = useGuests();
+  console.log('GuestTable rendered');
+  const { isLoading, data } = useGuests();
   if (isLoading) return <Spinner />;
 
+  const guests = data?.data;
   if (guests?.length === 0) {
     return <Empty resource="guests" />;
   }

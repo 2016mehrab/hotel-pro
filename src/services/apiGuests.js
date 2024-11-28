@@ -15,13 +15,18 @@ export async function deleteGuests() {
   const { error } = await supabase.from("guests").delete().gt("id", 0);
   if (error) console.log(error.message);
 }
-export async function getGuests() {
-  let { data: guests, error } = await supabase
+export async function getGuests({ sortBy }) {
+  let query = supabase
     .from('guests')
-    .select('*')
+    .select('*', { count: "exact" });
+
+  if (sortBy) {
+    query = query.order(sortBy.field, { ascending: sortBy.order === 'asc' });
+  }
+  const { data, error, count } = await query;
   if (error) {
     console.log(error.message);
     throw new Error("Guests could not be fetched");
   }
-  return guests;
+  return { data, count };
 }

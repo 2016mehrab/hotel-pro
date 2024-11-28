@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
@@ -15,7 +16,7 @@ export async function deleteGuests() {
   const { error } = await supabase.from("guests").delete().gt("id", 0);
   if (error) console.log(error.message);
 }
-export async function getGuests({ sortBy }) {
+export async function getGuests({ sortBy, page }) {
   let query = supabase
     .from('guests')
     .select('*', { count: "exact" });
@@ -23,6 +24,12 @@ export async function getGuests({ sortBy }) {
   if (sortBy) {
     query = query.order(sortBy.field, { ascending: sortBy.order === 'asc' });
   }
+  if (page) {
+    const from = PAGE_SIZE * page - 1 * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
   const { data, error, count } = await query;
   if (error) {
     console.log(error.message);

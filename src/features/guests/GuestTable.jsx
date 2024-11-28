@@ -5,13 +5,14 @@ import Empty from "../../ui/Empty";
 import Spinner from "../../ui/Spinner";
 import useGuests from "./useGuests";
 import GuestRow from "./GuestRow";
+import Pagination from "../../ui/Pagination";
 
 function GuestTable() {
   console.log('GuestTable rendered');
   const { isLoading, data } = useGuests();
   if (isLoading) return <Spinner />;
 
-  const guests = data?.data;
+  const { data: guests, count: count } = data;
   if (guests?.length === 0) {
     return <Empty resource="guests" />;
   }
@@ -36,7 +37,7 @@ function GuestTable() {
         />
 
         <Table.Footer>
-          <p>Pagination here</p>
+          <Pagination count={count} />
         </Table.Footer>
       </Table>
     </Menus>

@@ -15,3 +15,13 @@ export async function deleteGuests() {
   const { error } = await supabase.from("guests").delete().gt("id", 0);
   if (error) console.log(error.message);
 }
+export async function getGuests() {
+  let { data: guests, error } = await supabase
+    .from('guests')
+    .select('*')
+  if (error) {
+    console.log(error.message);
+    throw new Error("Guests could not be fetched");
+  }
+  return guests;
+}

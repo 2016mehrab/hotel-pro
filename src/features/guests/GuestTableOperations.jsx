@@ -1,9 +1,11 @@
+import SearchBar from "../../ui/SearchBar"
 import SortBy from "../../ui/SortBy"
 import TableOperations from "../../ui/TableOperations"
 
 const GuestTableOperations = () => {
   return (
     <TableOperations>
+      <SearchBar />
       <SortBy
         options={[
           { value: 'created_at-desc', label: 'Sort by registered(recent first)' },

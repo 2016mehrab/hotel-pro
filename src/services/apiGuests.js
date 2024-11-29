@@ -16,10 +16,32 @@ export async function deleteGuests() {
   const { error } = await supabase.from("guests").delete().gt("id", 0);
   if (error) console.log(error.message);
 }
+export async function getGuestsByPattern({ search }) {
+  let query = supabase
+    .from('guests')
+    .select('*');
+
+
+  if (search) {
+    const pattern = `%${search}%`;
+    console.log('submitted pattern', pattern);
+    query = isNaN(Number(search)) ? query.ilike('fullName', pattern) : query.eq('nationalID', search);
+    const { data, error } = await query;
+    if (error) {
+      console.log(error.message);
+      throw new Error("Guests could not be fetched");
+    }
+    return data;
+  }
+  return null;
+}
+
 export async function getGuests({ sortBy, page }) {
   let query = supabase
     .from('guests')
     .select('*', { count: "exact" });
+
+
 
   if (sortBy) {
     query = query.order(sortBy.field, { ascending: sortBy.order === 'asc' });

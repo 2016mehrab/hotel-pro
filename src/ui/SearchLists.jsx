@@ -39,18 +39,24 @@ const SearchLists = () => {
   if (isLoading) {
     return null;
   }
+  console.log("results", results)
   return (
     <Ul>
-      {results?.length > 0 && (
-        results.map(guest => {
-          return (
-            <Li key={guest.id}>
-              {guest.fullName}
-            </Li>
+      {results?.length > 0 ?
+        (
+          results.map(guest => {
+            return (
+              <Li key={guest.id}>
+                {guest.fullName}
+              </Li>
+            )
+          }
           )
-        }
-        )
-      )
+        ) :
+        <Li>
+          No Match
+        </Li>
+
       }
 
     </Ul>

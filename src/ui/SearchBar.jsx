@@ -2,10 +2,7 @@
 import { useSearchParams } from "react-router-dom";
 import Search from "./Search";
 import ButtonIcon from "./ButtonIcon";
-import { HiOutlineSearch, HiSearch } from "react-icons/hi";
 import { useState } from "react";
-import useSearchGuests from "../features/guests/useSearchGuests";
-import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { HiOutlineXMark } from "react-icons/hi2";
 
@@ -28,22 +25,17 @@ const SearchBar = () => {
     setSearchPrams(searchParams);
   }
 
-  function handleBlur(e) {
-    searchParams.set('search', '');
+  function handleReset(e) {
+    e.preventDefault();
+    setSearchValue('')
+    searchParams.set('search', searchValue);
     setSearchPrams(searchParams);
     console.log('Search bar cleared');
   }
 
   return (
-    <Form onBlur={handleBlur}>
-      <Search onChange={handleChange} value={searchValue} />
-      <ButtonIcon>
-        <HiOutlineXMark />
-      </ButtonIcon>
-      <ButtonIcon type="submit" onClick={handleSubmit}>
-        <HiOutlineSearch />
-      </ButtonIcon >
-
+    <Form>
+      <Search reset={handleReset} placeholder={'search guest'} onChange={handleChange} onClick={handleSubmit} value={searchValue} />
     </Form>
 
   )

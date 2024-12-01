@@ -23,7 +23,7 @@ const Overlay = styled.div`
 `;
 const StyledModal = styled.div`
   border-radius: 5px;
-  background-color: #fff;
+  background-color: var(--color-grey-0);
   overflow: auto;
   display: grid;
   padding: 1em;
@@ -48,22 +48,22 @@ const Modal = ({ children }) => {
   );
 };
 
-const Open = ({ children, requestedWindow}) => {
+const Open = ({ children, requestedWindow }) => {
   const { openHandler } = useContext(ModalContext);
   return cloneElement(children, {
     onClick: () => openHandler(requestedWindow),
   });
 };
 
-const Window = ({ children, window, closeIcon }) => {
+const Window = ({ children, windowName, closeIcon }) => {
   const { modalName, closeHandler } = useContext(ModalContext);
-  const ref = useCloseModal(window, modalName, closeHandler);
+  const ref = useCloseModal(windowName, modalName, closeHandler);
 
-  if (window !== modalName) return null;
+  if (windowName !== modalName) return null;
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}
-      tabIndex={-1}
+        tabIndex={-1}
       >
         {closeIcon ? (
           <CloseWrapper>
@@ -71,10 +71,10 @@ const Window = ({ children, window, closeIcon }) => {
           </CloseWrapper>
         ) : (
           <CloseWrapper>
-            <button onClick={closeHandler}  style={{ paddingInline: "1em",border:'none' }}>X</button>
+            <button onClick={closeHandler} style={{ paddingInline: "1em", border: 'none' }}>X</button>
           </CloseWrapper>
         )}
-        <div>{cloneElement(children,{closeModal:closeHandler})}</div>
+        <div>{cloneElement(children, { closeModal: closeHandler })}</div>
       </StyledModal>
     </Overlay>,
     document.body

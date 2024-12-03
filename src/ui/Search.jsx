@@ -34,7 +34,7 @@ const Ul = styled.ul`
   border-radius: var(--border-radius-sm);
   left:0;
 width:${props => props.$inputWidth !== 0 ? `${props.$inputWidth}px ` : `15rem`};
-top: ${props => props.$inputHeight !== 0 ? `${props.$inputHeight + 4}px` : `3.2rem`};
+top: 100%;
 
 & > *{
   border-bottom: 1px solid white;

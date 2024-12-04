@@ -148,7 +148,26 @@ export async function getStaysAfterDate(date) {
   return data;
 }
 
-// Activity means that there is a check in or a check out today
+
+/* SELECT 
+  bookings.*, 
+  guests.fullName, 
+  guests.nationality, 
+  guests.countryFlag
+FROM 
+  bookings
+LEFT JOIN 
+  guests 
+ON 
+  bookings.guest_id = guests.id
+WHERE 
+  (status = 'unconfirmed' AND startDate = CURRENT_DATE)
+  OR 
+  (status = 'checked-in' AND endDate = CURRENT_DATE)
+ORDER BY 
+  created_at; */
+
+// Activity means that there is a check in or a check out (for those who are already checked-in) today
 export async function getStaysTodayActivity() {
   const { data, error } = await supabase
     .from("bookings")

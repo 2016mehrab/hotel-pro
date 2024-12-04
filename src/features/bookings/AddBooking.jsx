@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Button from "../../ui/Button";
 import Modal from "../../ui/ReusableModal";
 import Spinner from "../../ui/Spinner";

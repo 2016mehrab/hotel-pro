@@ -24,7 +24,6 @@ export async function getGuestsByPattern({ search }) {
 
   if (search) {
     const pattern = `%${search}%`;
-    console.log('submitted pattern', pattern);
     query = isNaN(Number(search)) ? query.ilike('fullName', pattern) : query.eq('nationalID', search);
     const { data, error } = await query;
     if (error) {

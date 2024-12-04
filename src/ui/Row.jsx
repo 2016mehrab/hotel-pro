@@ -9,14 +9,14 @@ const justifyContent = css`
 const Row = styled.div`
   display: flex;
   ${(props) =>
-    props.direction === "verticle" &&
+    props.type === "verticle" &&
     css`
       flex-direction: column;
       ${alignItems}
       ${justifyContent}
     `}
   ${(props) =>
-    props.direction === "horizontal" &&
+    props.type === "horizontal" &&
     css`
       flex-direction: row;
       ${justifyContent}
@@ -24,6 +24,6 @@ const Row = styled.div`
     `}
 `;
 Row.defaultProps = {
-  direction: "verticle",
+  type: "verticle",
 };
 export default Row;

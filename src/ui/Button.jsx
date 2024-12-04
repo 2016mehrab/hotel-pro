@@ -3,19 +3,20 @@ import styled, { css } from "styled-components";
 const sizes = {
   small: css`
     font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4em 0.8em;
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;
   `,
   medium: css`
     font-size: 1.4rem;
-    padding: 1.2rem 1.6rem;
+    /* padding: 1em 1.6em; */
+    padding: 0.8em 1.2em;
     font-weight: 500;
   `,
   large: css`
     font-size: 1.6rem;
-    padding: 1.2rem 2.4rem;
+    padding: 1em 1.3em;
     font-weight: 500;
   `,
 };

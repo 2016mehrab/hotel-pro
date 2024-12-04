@@ -43,7 +43,6 @@ function GuestRow(
 
   } = {} }
 ) {
-  console.log('GuestRow rendered');
   return (
     <Table.Row>
       <div>{fullName}</div>

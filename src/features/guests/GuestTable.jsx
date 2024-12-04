@@ -8,7 +8,6 @@ import GuestRow from "./GuestRow";
 import Pagination from "../../ui/Pagination";
 
 function GuestTable() {
-  console.log('GuestTable rendered');
   const { isLoading, data } = useGuests();
   if (isLoading) return <Spinner />;
 

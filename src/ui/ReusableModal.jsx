@@ -46,6 +46,7 @@ const Modal = ({ children }) => {
       {children}
     </ModalContext.Provider>
   );
+
 };
 
 const Open = ({ children, requestedWindow }) => {

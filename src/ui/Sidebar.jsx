@@ -17,11 +17,10 @@ const StyledSidebar = styled.aside`
 `;
 const Sidebar = () => {
   return (
-      <StyledSidebar>
-        <Logo />
-        <MainNav />
-        <Uploader/>
-      </StyledSidebar>
+    <StyledSidebar>
+      <Logo />
+      <MainNav />
+    </StyledSidebar>
   );
 };
 

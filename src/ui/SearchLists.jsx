@@ -39,7 +39,6 @@ const SearchLists = () => {
   if (isLoading) {
     return null;
   }
-  console.log("results", results)
   return (
     <Ul>
       {results?.length > 0 ?

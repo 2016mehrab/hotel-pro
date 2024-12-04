@@ -57,7 +57,6 @@ const SalesChart = ({ bookings, numDays }) => {
     start: subDays(new Date(), numDays - 1),
     end: new Date(),
   })
-  console.log("allDates", allDates)
   const data = allDates.map(date => {
     return {
       label: format(date, 'MMM dd'),
@@ -66,14 +65,10 @@ const SalesChart = ({ bookings, numDays }) => {
         return isSameDay(date, new Date(booking.created_at))
       }).reduce((acc, curr) => acc + curr.totalPrice, 0),
       extrasSales: bookings.filter((booking) => {
-        if (isSameDay(date, new Date(booking.created_at))) {
-          console.table(booking)
-        }
         return isSameDay(date, new Date(booking.created_at))
       }).reduce((acc, curr) => acc + curr.extrasPrice, 0)
     }
   })
-  console.log("data", data)
 
   const colors = isDarkMode
     ? {

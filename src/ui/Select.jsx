@@ -21,7 +21,7 @@ const Select = React.forwardRef(({ options, value, onChange, ...rest }, ref) => 
   return (
     <StyledSelect {...rest} ref={ref} onChange={onChange} value={value}>{options.map(option => {
       return (
-        <option key={option.value} value={option.value}>
+        <option key={option.label} value={option.value}>
           {option.label}
         </option>
       )

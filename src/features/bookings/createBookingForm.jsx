@@ -9,7 +9,7 @@ import FormRow from "../../ui/FormRow";
 
 import { useForm } from "react-hook-form";
 import Select from "../../ui/Select";
-import { differenceInDays, isSameMonth } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { isDateBetween } from "../../utils/helpers";
 import useInsertBooking from "./useInsertBooking";
 import { useEffect, useMemo, useState } from "react";
@@ -19,9 +19,10 @@ const paidStatus = [
   { label: 'Will pay at property', value: false },
   { label: 'Paid', value: true },
 ]
+
+
 function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settings = {}, cabins = {}, bookings = {} }) {
 
-  console.log('CreateBookingForm rerendered!');
   const { maxGuestsPerBooking, minNightsPerBooking, maxNightsPerBooking } = settings;
   const { id: editId, ...editValues } = bookingToEdit;
 
@@ -41,10 +42,12 @@ function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settin
 
   function filterCabins(startDate, endDate, numGuests, bookings, cabins) {
 
-    // Add all cabins to a set
+    // Add all cabins having numGuests capacity in a set
     const validCabinMap = new Map();
     cabins.forEach(cabin => {
-      validCabinMap.set(cabin.id, cabin);
+      if (cabin.capacity >= numGuests) {
+        validCabinMap.set(cabin.id, cabin);
+      }
     })
 
     // remove cabins from valid cabin map if it is booked
@@ -54,14 +57,12 @@ function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settin
       }
     })
 
-    console.log('Final cabins ', validCabinMap);
-
     return Array.from(validCabinMap.values());
   }
 
   function formatData(data) {
     const formatedData = data.map(cabin => {
-      const price = cabin.price - Math.round(Number(cabin.price) * Number(cabin.discount) / 100)
+      let price = cabin.price - Math.round(Number(cabin.price) * Number(cabin.discount) / 100)
       return {
         label: cabin.name,
         value: `${cabin.id}-${price}`,
@@ -107,25 +108,23 @@ function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settin
 
   const selectedStartDate = watch('startDate');
   const selectedEndDate = watch('endDate');
-  const selectedCabin = watch('cabinId');
   const selectedNumGuests = watch('numGuests');
   const [cabinPrice, setCabinPrice] = useState();
   const validCabins = useMemo(() => {
     if (selectedStartDate && selectedEndDate) {
-
       return filterCabins(selectedStartDate, selectedEndDate, selectedNumGuests, bookings, cabins);
     }
     return [];
   }, [selectedStartDate, selectedEndDate, selectedNumGuests, bookings, cabins]);
 
   useEffect(() => {
-    if (selectedCabin) {
-      let [_, price] = selectedCabin.split('-');
-      price = Number(price);
+    if (getValues().cabinId) {
+      let [_, price] = getValues().cabinId.split('-');
+      price = Number(price) * differenceInDays(new Date(selectedEndDate), new Date(selectedStartDate));
       setCabinPrice(price);
       setValue("totalPrice", price);
     }
-  }, [selectedCabin, setValue, setCabinPrice])
+  }, [getValues, setValue, setCabinPrice, selectedStartDate, selectedEndDate])
 
 
   return (
@@ -228,8 +227,7 @@ function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settin
                 <Input
                   type="number"
                   id="totalPrice"
-                  //disabled={cabinPrice !== 0 && isWorking}
-                  disabled={cabinPrice === 0}
+                  disabled={isWorking}
                   defaultValue={cabinPrice}
                   min={cabinPrice}
                   {...register("totalPrice", {

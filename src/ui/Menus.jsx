@@ -98,6 +98,8 @@ function Button({ children, icon, onClick }) {
 function Toggle({ id }) {
   const { menuId, close, open, setPosition } = useContext(MenusContext);
   function handleClick(e) {
+    e.stopPropagation();
+    //console.log('handleClick', e.target);
     const rect = e.target.closest("button").getBoundingClientRect();
     // console.log('window.innderwidth', window.innerWidth);
     // console.log('button width', rect.width);
@@ -117,7 +119,7 @@ function Toggle({ id }) {
 
 function List({ id, children }) {
   const { menuId, position, close } = useContext(MenusContext);
-  const ref = useCloseModal(id, menuId, close);
+  const ref = useCloseModal(id, menuId, close, false);
   if (menuId !== id) return null;
   return createPortal(
     <StyledList position={position} ref={ref} tabIndex={-1}>{children}</StyledList>,

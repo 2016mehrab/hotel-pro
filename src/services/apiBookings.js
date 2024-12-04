@@ -4,7 +4,7 @@ import { getToday } from "../utils/helpers";
 import { insertGuest } from "./apiGuests";
 import supabase from "./supabase";
 
-export async function createBooking(data) {
+export async function createGuestAndBooking(data) {
   // Bookings need a guestId and a cabinId. We can't tell Supabase IDs for each object, it will calculate them on its own. So it might be different for different people, especially after multiple uploads. Therefore, we need to first get all guestIds and cabinIds, and then replace the original IDs in the booking data with the actual ones from the DB
 
   const guestData = {
@@ -23,6 +23,30 @@ export async function createBooking(data) {
     startDate: data.startDate,
     endDate: data.endDate,
     guestId: guest.id,
+    cabinId: data.cabinId,
+    status: data.status,
+    isPaid: data.isPaid,
+    observations: data.observations,
+    totalPrice: data.totalPrice,
+    numNights: data.numNights,
+    numGuests: data.numGuests,
+    hasBreakfast: data.hasBreakfast,
+  }
+  const { error } = await supabase.from("bookings").insert(bookingData);
+  if (error) {
+    console.log(error.message);
+    throw new Error("Cabin booking failed");
+  }
+
+}
+
+export async function createBooking(data) {
+  const guestId = data?.guest?.id;
+
+  const bookingData = {
+    startDate: data.startDate,
+    endDate: data.endDate,
+    guestId,
     cabinId: data.cabinId,
     status: data.status,
     isPaid: data.isPaid,

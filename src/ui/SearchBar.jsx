@@ -1,19 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { useSearchParams } from "react-router-dom";
 import Search from "./Search";
 import ButtonIcon from "./ButtonIcon";
-import { useState } from "react";
 import styled from "styled-components";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { HiOutlineSearch } from "react-icons/hi";
+import { SearchLi as Li } from "./SearchLi";
+import useSearchGuests from "../features/guests/useSearchGuests";
 
-const Form = styled.form`
-display:flex;
-justify-content: space-between;
-align-items:center;
-gap: 0.3rem;
-`
-const SearchBar = () => {
+const GuestSearchBar = () => {
 
   return (
     <Search >
@@ -28,11 +22,17 @@ const SearchBar = () => {
             <HiOutlineXMark />
           </ButtonIcon>
         </Search.CloseIcon>
-        <Search.Lists />
+        <Search.Lists customSearchDataHook={useSearchGuests} render={guest => {
+          return (
+            <Li key={guest.id}>
+              {guest.fullName}
+            </Li>
+          )
+        }} />
       </Search.Input>
     </Search>
 
   )
 }
 
-export default SearchBar
+export default GuestSearchBar

@@ -3,7 +3,8 @@
 import styled from "styled-components"
 import { cloneElement, createContext, useContext, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import useSearchGuests from "../features/guests/useSearchGuests";
+import { SearchUl as Ul } from "./SearchUl";
+import { SearchLi as Li } from "./SearchLi";
 
 const StyledInput = styled.input.attrs({ type: 'search' })`
   background-color: var(--color-grey-0);
@@ -21,39 +22,6 @@ const StyledInput = styled.input.attrs({ type: 'search' })`
     outline-offset: -1px;
   }
 `
-const Ul = styled.ul`
-  list-style: none;
-  letter-spacing: 2px;
-  color:var(--color-grey-600) ;
-  max-height: 30rem;
-  overflow-y: scroll;
-  border: 1px solid white;
-  scrollbar-color: var(--color-grey-600) var(--color-brand-600) ;
-  scrollbar-width:auto;
-  position:absolute;
-  border-radius: var(--border-radius-sm);
-  left:0;
-width:${props => props.$inputWidth !== 0 ? `${props.$inputWidth}px ` : `15rem`};
-top: 100%;
-
-& > *{
-  border-bottom: 1px solid white;
-
-}
-& > *:last-child{
-  border-bottom:none;
-
-}
-`
-const Li = styled.li`
-  background-color:var(--color-grey-0);
-  padding: 1em 1.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
-  text-transform: capitalize;
-  display: flex;
-  justify-content: space-between;
-  border-radius: var(--border-radius-sm);
-`;
 
 const Form = styled.form`
 position:relative;
@@ -110,8 +78,8 @@ const Search = ({ children }) => {
   )
 }
 
-function Lists() {
-  const { data: results, isLoading } = useSearchGuests();
+function Lists({ render, customSearchDataHook }) {
+  const { data: results, isLoading } = customSearchDataHook();
   const { searchValue, inputDimensions } = useContext(SearchContext);
   const [searchParams] = useSearchParams();
 
@@ -127,13 +95,8 @@ function Lists() {
       }>
       {results?.length > 0 ?
         (
-          results.map(guest => {
-            return (
-              <Li key={guest.id}>
-                {guest.fullName}
-              </Li>
-            )
-          }
+          results.map(
+            render
           )
         ) :
         <Li>

@@ -15,6 +15,7 @@ import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye, HiTrash } from "react-ic
 import { useNavigate } from "react-router-dom";
 import useCheckout from "../check-in-out/useCheckout";
 import useDeleteBooking from "./useDeleteBooking.js";
+import Button from "../../ui/Button";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -54,11 +55,9 @@ function BookingRow({
     totalPrice,
     status,
     guests: { fullName: guestName, email },
-    // cabins: { name: cabinName },
     cabins,
   },
 }) {
-  // const cabinName = cabins.name || "Unknown Cabin";
   const cabinName = cabins ? cabins.name : "Unknown Cabin";
   const { checkout, isLoading: isCheckingOut } = useCheckout();
   const { deleteBooking, isDeleting } = useDeleteBooking();
@@ -130,7 +129,9 @@ function BookingRow({
             </ReusableModal.Open>
           </Menus.List>
         </Menus.Menu>
-        <ReusableModal.Window windowName="delete-booking">
+        <ReusableModal.Window closeIcon={
+          <Button>x</Button>
+        } windowName="delete-booking">
           <ConfirmDelete resourceName="booking" onConfirm={() => { deleteBooking(bookingId) }} />
         </ReusableModal.Window>
       </ReusableModal>

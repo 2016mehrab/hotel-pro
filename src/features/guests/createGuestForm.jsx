@@ -39,7 +39,7 @@ function CreateGuestForm({ guestToEdit = {}, closeModal }) {
     reset();
   }
 
-  const { formState, register, handleSubmit, reset, getValues } = useForm({
+  const { formState, register, handleSubmit, reset } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
 

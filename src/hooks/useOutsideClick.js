@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 
-export default function useOutsideClick( windowName, requestWindowName, closeHandler, listenCapturing=true) {
+export default function useOutsideClick(modalWindowName, requestWindowName, closeHandler, listenCapturing = true) {
   const domRef = useRef();
 
   useEffect(() => {
-    if (requestWindowName !== windowName) return;
+    if (requestWindowName !== modalWindowName) return;
 
     function handleClick(e) {
       if (domRef.current && !domRef.current.contains(e.target)) {
@@ -25,6 +25,6 @@ export default function useOutsideClick( windowName, requestWindowName, closeHan
       document.removeEventListener("click", handleClick, listenCapturing);
       document.removeEventListener("keydown", handleKeyDown, listenCapturing);
     };
-  }, [closeHandler, requestWindowName, windowName, listenCapturing]);
+  }, [closeHandler, requestWindowName, modalWindowName, listenCapturing]);
   return domRef;
 }

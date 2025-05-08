@@ -36,9 +36,11 @@ const App = () => {
         <GlobalStyles />
         <BrowserRouter>
           <Routes>
-            <Route element={<ProtectedRoutes>
+            <Route element={
+              <ProtectedRoutes>
               <AppLayout />
-            </ProtectedRoutes>}>
+            </ProtectedRoutes>
+          }>
               <Route index element={<Navigate replace to="dashboard" />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="guests" element={<Guests />} />

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 
 const FullPage = styled.div`
-heigth:100vh;
+height:100vh;
 display:flex;
 background-color:var(--color-grey-50);
 align-items:center;

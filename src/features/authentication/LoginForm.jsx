@@ -7,11 +7,16 @@ import FormRowVertical from "../../ui/FormRowVertical.jsx";
 import SpinnerMini from "../../ui/SpinnerMini.jsx"
 
 import { useLogin } from "./useLogin.js";
+import Row from "../../ui/Row";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoading } = useLogin();
+  const sample={
+    email:"elizabethdiana8@punkproof.com",
+    password:"m^6*tEfJu^U",
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -35,6 +40,7 @@ function LoginForm() {
           id="email"
           // This makes this form better for password managers
           autoComplete="username"
+          placeholder="Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
@@ -45,12 +51,18 @@ function LoginForm() {
           type="password"
           id="password"
           autoComplete="current-password"
+          placeholder="Your Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
 
           disabled={isLoading}
         />
       </FormRowVertical>
+      <Row>
+        <h3>Try the app with:</h3>
+        <p>email: {sample.email}</p>
+        <p>password: {sample.password}</p>
+      </Row>
       <FormRowVertical>
         <Button
           disabled={isLoading}

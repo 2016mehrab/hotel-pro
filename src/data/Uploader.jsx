@@ -103,6 +103,13 @@ function Uploader() {
     await createCabins();
     setIsLoading(false);
   }
+  async function uploadGuests(){
+    setIsLoading(true);
+
+    await deleteGuests();
+    await createGuests();
+    setIsLoading(false);
+  }
 
   async function uploadAll() {
     setIsLoading(true);
@@ -144,6 +151,9 @@ function Uploader() {
         Upload Cabins
       </Button>
 
+      <Button onClick={uploadGuests} disabled={isLoading}>
+        Upload Guests
+      </Button>
       <Button onClick={uploadAll} disabled={isLoading}>
         Upload ALL
       </Button>

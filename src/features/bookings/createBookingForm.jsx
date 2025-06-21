@@ -124,7 +124,7 @@ function CreateBookingForm({ bookingToEdit = {}, closeModal, guests = {}, settin
       setCabinPrice(price);
       setValue("totalPrice", price);
     }
-  }, [getValues, setValue, setCabinPrice, selectedStartDate, selectedEndDate])
+  }, [getValues, setValue, setCabinPrice, selectedStartDate, selectedEndDate,watch('cabinId')])
 
 
   return (
